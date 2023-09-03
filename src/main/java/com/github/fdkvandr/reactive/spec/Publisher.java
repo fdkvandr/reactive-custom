@@ -2,9 +2,11 @@ package com.github.fdkvandr.reactive.spec;
 
 import com.github.fdkvandr.reactive.spec.publisher.JustPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.MapPublisher;
+import com.github.fdkvandr.reactive.spec.publisher.PeekPublisher;
 import com.github.fdkvandr.reactive.spec.subsctiber.CollectingSubscriber;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface Publisher<T> {
@@ -18,6 +20,10 @@ public interface Publisher<T> {
 
     default <R> Publisher<R> map(Function<T, R> mapper) {
         return new MapPublisher<>(this, mapper);
+    }
+
+    default Publisher<T> peek(Consumer<T> consumer) {
+        return new PeekPublisher<>(this, consumer);
     }
 
     default List<T> collect() {
