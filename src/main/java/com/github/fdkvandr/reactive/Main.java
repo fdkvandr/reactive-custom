@@ -1,7 +1,9 @@
 package com.github.fdkvandr.reactive;
 
 import com.github.fdkvandr.reactive.spec.Publisher;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Main {
 
     public static void main(String[] args) {
@@ -22,7 +24,15 @@ public class Main {
 
     private static void test2() {
         Publisher.just(1, 2, 3)
-                .map(it -> it + 1)
-                .consume(System.out::println);
+                .parallel(2)
+                .map(it -> {
+                    try {
+                        Thread.sleep(5000L);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return it + 1;
+                })
+                .consume(it -> log.info("{}", it));
     }
 }

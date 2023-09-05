@@ -3,6 +3,7 @@ package com.github.fdkvandr.reactive.spec;
 import com.github.fdkvandr.reactive.spec.publisher.DeferredPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.JustPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.MapPublisher;
+import com.github.fdkvandr.reactive.spec.publisher.ParallelPublisher;
 import com.github.fdkvandr.reactive.spec.subsctiber.CollectingSubscriber;
 import com.github.fdkvandr.reactive.spec.subsctiber.ConsumingSubscriber;
 
@@ -48,5 +49,9 @@ public interface Publisher<T> {
     default void consume(Consumer<T> consumer) {
         ConsumingSubscriber<T> subscriber = new ConsumingSubscriber<>(consumer);
         subscribe(subscriber);
+    }
+
+    default Publisher<T> parallel(int n) {
+        return new ParallelPublisher<>(this, n);
     }
 }
