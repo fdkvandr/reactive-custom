@@ -1,5 +1,6 @@
 package com.github.fdkvandr.reactive.spec;
 
+import com.github.fdkvandr.reactive.spec.publisher.DeferredPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.JustPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.MapPublisher;
 import com.github.fdkvandr.reactive.spec.subsctiber.CollectingSubscriber;
@@ -7,6 +8,7 @@ import com.github.fdkvandr.reactive.spec.subsctiber.CollectingSubscriber;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface Publisher<T> {
 
@@ -15,6 +17,14 @@ public interface Publisher<T> {
     @SafeVarargs
     static <T> Publisher<T> just(T... values) {
         return new JustPublisher<>(values);
+    }
+
+    static <T> Publisher<T> defer(Supplier<Publisher<T>> supplier) {
+        return new DeferredPublisher<>(supplier);
+    }
+
+    static <T> Publisher<T> from(Supplier<T[]> supplier) {
+        return new DeferredPublisher<>(() -> Publisher.just(supplier.get()));
     }
 
     default <R> Publisher<R> map(Function<T, R> mapper) {
