@@ -4,6 +4,7 @@ import com.github.fdkvandr.reactive.spec.publisher.DeferredPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.JustPublisher;
 import com.github.fdkvandr.reactive.spec.publisher.MapPublisher;
 import com.github.fdkvandr.reactive.spec.subsctiber.CollectingSubscriber;
+import com.github.fdkvandr.reactive.spec.subsctiber.ConsumingSubscriber;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,5 +43,10 @@ public interface Publisher<T> {
         CollectingSubscriber<T> subscriber = new CollectingSubscriber<>();
         subscribe(subscriber);
         return subscriber.blockingGet();
+    }
+
+    default void consume(Consumer<T> consumer) {
+        ConsumingSubscriber<T> subscriber = new ConsumingSubscriber<>(consumer);
+        subscribe(subscriber);
     }
 }
